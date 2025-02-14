@@ -26,7 +26,7 @@ export const getProduct = async (req, res) => {
         const prod = await productModel.findById(idProd)
 
         if (prod) {
-            res.status(200).render('templates/product', { prod })
+            res.status(200).send(prod)
         } else {
             res.status(404).render('templates/Error', { e: "Producto no encontrado" })
         }
@@ -42,9 +42,8 @@ export const updateProduct = async (req, res) => {
         const idProd = req.params.pid
         const updateProduct = req.body
         const prod = await productModel.findByIdAndUpdate(idProd, updateProduct)
-
-        if (updatedProduct) {
-            res.status(200).render('templates/home', { prod })
+        if (prod) {
+            res.status(200).send(prod)
         } else {
             res.status(404).render('templates/error', { e: "Producto no encontrado" })
         }
@@ -72,11 +71,11 @@ export const deleteProduct = async (req, res) => {
         const rta = await productModel.findByIdAndDelete(idProd)
 
         if (rta)
-            res.status(200).redirect('templates/home')
+            res.status(200).send("Producto eliminado con éxito id: " + idProd)
         else
             res.status(404).render('templates/error', { e: "Producto no encontrado" })
     } catch (e) {
         console.log("Error en productManager delete", e)
-        res.status(500).render('templates/error', { e })
+        res.status(500).send("Error al eliminar")
     }
 }
