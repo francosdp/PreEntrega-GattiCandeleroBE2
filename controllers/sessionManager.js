@@ -17,7 +17,7 @@ export const login = async (req, res) => {
             maxAge: 86400000
         })
         const user = req.session.user
-        res.status(200).render('templates/userplatform',{ user })
+        res.status(200).render('templates/userplatform',{user})
     } catch (e) {
         console.log("Error en Manager Login", e)
         res.status(500).send("Error al loguear")
@@ -47,4 +47,13 @@ res.status(200).redirect("/")
 console.log("Error en Manager GitHub", e)
 res.stats(500).send("Error al ingresar vía GitHub")
     }
+}
+
+
+export const viewRegister = (req,res) => {
+    res.status(200).render('templates/register', {})
+}
+
+export const viewLogin = (req,res) => {
+    res.status(200).render('templates/login', {})
 }

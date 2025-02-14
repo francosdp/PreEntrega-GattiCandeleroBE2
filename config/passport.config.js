@@ -21,23 +21,23 @@ const cookieReader = (req) => {
 }
 
 export const passportCall = (strategy) => {
-    return async(req,res,next) => {
-        
-        passport.authenticate('jwt', function(err,user, info) {
-            if(err) return next(err)
-            
-            if(!user) {
-                return res.status(401).send({error: info.messages?info.messages: info.toString()})
+    return async (req, res, next) => {
+
+        passport.authenticate(strategy, function (err, user, info) {
+            if (err) return next(err)
+
+            if (!user) {
+                return res.status(401).send({ error: info.messages ? info.messages : info.toString() })
             }
             req.user = user
             next()
-        } (req,res,next))
+        }(req, res, next))
     }
 }
 
 const inizializatePassport = () => {
 
-    passport.use('register', new localStrat({ passReqToCallback: true, usernameField: 'email' }, async (req,email,password, done) => {
+    passport.use('register', new localStrat({ passReqToCallback: true, usernameField: 'email' }, async (req, email, password, done) => {
         try {
             const { first_name, last_name, email, password, age } = req.body
             const findUser = await userModel.findOne({ email: email })
@@ -51,7 +51,7 @@ const inizializatePassport = () => {
                 })
                 return done(null, user)
             } else {
-                return done(null, false, {message:"El usuario ya existe"})
+                return done(null, false, { message: "El usuario ya existe" })
             }
         } catch (e) {
             console.log("Error de registro", e)
@@ -80,7 +80,7 @@ const inizializatePassport = () => {
         clientID: 'Iv23lieub4qiDEushTBh',
         clientSecret: '65a4e8ba2bb7556b76b9acc85f99e0f2bd62e76c',
         callbackURL: "http://localhost:9090/api/sessions/githubcallback"
-    }, async (profile, done) => {
+    }, async (accessToken, refreshToken, profile, done) => {
         try {
 
             let user = await userModel.findOne({ email: profile._json.email })
@@ -111,10 +111,8 @@ const inizializatePassport = () => {
         secretOrKey: "usersecret",
     }, async (jwt_payload, done) => {
         try {
-            console.log(jwt_payload)
             return done(null, jwt_payload)
         } catch (e) {
-            console.log("Error JWT Strat", e)
             return done(e)
         }
     }))

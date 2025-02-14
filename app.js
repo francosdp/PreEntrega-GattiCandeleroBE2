@@ -10,7 +10,7 @@ import { create } from 'express-handlebars'
 import cartRouter from './routes/carts.routes.js'
 import sessionRouter from './routes/session.routes.js'
 import productRouter from './routes/products.routes.js'
-
+import cookieParser from 'cookie-parser'
 
 
 
@@ -27,6 +27,7 @@ const hbs=create()
 
 
 app.use(express.json())
+app.use(cookieParser())
 app.use(session({
 store:MongoStore.create({
     mongoUrl: "mongodb+srv://Franco:fransdp.atlas@cluster0.ei50y.mongodb.net/BackEnd2?retryWrites=true&w=majority&appName=Cluster0",
